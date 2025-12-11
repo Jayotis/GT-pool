@@ -61,7 +61,7 @@ git log --follow pool_checksum.txt
 **Before Draw (Dec 10, 2025)**
 - Pool created: 10 entries with optimized numbers
 - Checksum generated and committed to repository
-- Published checksum: `909a297dc725c2e9143ff8a8d1da429ad280950693694b520a795fac234d86e3`
+- Published checksum: `87b0c7620be3e9859a7e21983034a399c5ddc8042448b5f0f7f97437e496d390`
 
 **After Draw (Dec 11, 2025)**
 - Winning numbers announced

@@ -16,8 +16,8 @@ if [ ! -f "$CHECKSUM_FILE" ]; then
     exit 1
 fi
 
-# Extract the checksum from the checksum file
-STORED_CHECKSUM=$(grep -A 1 "SHA-256 Checksum:" "$CHECKSUM_FILE" | tail -n 1)
+# Extract the checksum from the checksum file (line 7 contains the hash)
+STORED_CHECKSUM=$(sed -n '7p' "$CHECKSUM_FILE")
 
 # Calculate current checksum
 CURRENT_CHECKSUM=$(sha256sum "$POOL_FILE" | awk '{print $1}')
