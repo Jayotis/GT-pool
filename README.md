@@ -38,8 +38,14 @@ An ingot pool is a curated set of lottery number combinations generated using th
 
 ## Repository Contents
 
-- `ingot_pool.json` - The ingot pool data containing optimized number combinations
+### Pool Files
+- `ingot_pool.json` - The ingot pool data containing optimized number combinations (JSON format)
+- `YYYY-MM-DD_combinations.txt` - Text file with indexed combinations from the pool
+- `YYYY-MM-DD_results.txt` - Lottery draw results and prize breakdown (added after draw)
+
+### Verification Files
 - `pool_checksum.txt` - SHA-256 checksum published before the draw for verification
+- `pool_checksum_verify.txt` - Standard format checksum file for automated verification
 - `generate_checksum.sh` - Script to generate checksums
 - `verify_checksum.sh` - Script to verify pool integrity
 
@@ -72,6 +78,8 @@ sha256sum ingot_pool.json
 
 ## Pool Structure
 
+### JSON Format (ingot_pool.json)
+
 The ingot pool is stored in JSON format with the following structure:
 
 ```json
@@ -94,6 +102,30 @@ The ingot pool is stored in JSON format with the following structure:
   }
 }
 ```
+
+### Combinations File Format (YYYY-MM-DD_combinations.txt)
+
+The combinations file lists all pool entries in a simple text format:
+
+```
+[0] 1 2 3 4 5 6
+[1] 1 2 3 4 5 7
+[2] 1 2 3 4 5 8
+...
+```
+
+Each line shows the combination index and the numbers for that entry.
+
+### Results File Format (YYYY-MM-DD_results.txt)
+
+After the lottery draw, results are documented including:
+- Draw date and winning numbers
+- Bonus number
+- Total combinations checked
+- SHA-256 checksum of the combinations file
+- Prize breakdown (matches at each level)
+- Jackpot winning combination ID (if applicable)
+- Link to public posting for verification
 
 ## Transparency and Trust
 

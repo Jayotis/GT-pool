@@ -6,7 +6,11 @@
 Use the Golden Ticket app to create your optimized ingot pool with strategically selected numbers.
 
 ### Step 2: Save Pool to Repository
-Save your pool data to `ingot_pool.json` in this repository format.
+Save your pool data in three formats:
+1. **JSON format**: `ingot_pool.json` - Structured data with metadata
+2. **Combinations format**: `YYYY-MM-DD_combinations.txt` - Simple text list of combinations
+   - Format: `[index] number1 number2 number3 number4 number5 number6`
+   - Example: `[0] 1 2 3 4 5 6`
 
 ### Step 3: Generate and Publish Checksum
 Before the lottery draw, run:
@@ -17,7 +21,18 @@ Before the lottery draw, run:
 This creates `pool_checksum.txt` with the SHA-256 hash. **Commit and push this to the repository before the draw.**
 
 ### Step 4: After the Draw
-Compare your pool results with the winning numbers and publish the results. Anyone can verify your pool wasn't modified after the checksum was published.
+1. Create the results file: `YYYY-MM-DD_results.txt` with:
+   - Draw date and winning numbers
+   - Bonus number
+   - Total combinations checked
+   - SHA-256 checksum of the combinations file
+   - Prize breakdown showing wins at each level
+   - Jackpot winning combination ID (if applicable)
+   - Link to public posting (e.g., Facebook, Twitter)
+
+2. Commit and push the results file
+
+Anyone can verify your pool wasn't modified after the checksum was published.
 
 ## For Verifiers (Anyone Wanting to Verify Authenticity)
 

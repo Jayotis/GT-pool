@@ -1,10 +1,12 @@
 #!/bin/bash
 
 # Verify the ingot pool checksum
-# This script verifies that the pool file hasn't been modified since checksum generation
+# This script verifies that the pool file(s) haven't been modified since checksum generation
 
 POOL_FILE="ingot_pool.json"
 CHECKSUM_FILE="pool_checksum.txt"
+DATE=$(date -u +"%Y-%m-%d")
+COMBINATIONS_FILE="${DATE}_combinations.txt"
 
 if [ ! -f "$POOL_FILE" ]; then
     echo "Error: $POOL_FILE not found"
@@ -16,24 +18,54 @@ if [ ! -f "$CHECKSUM_FILE" ]; then
     exit 1
 fi
 
-# Extract the checksum from the checksum file (line 7 contains the hash)
-STORED_CHECKSUM=$(sed -n '7p' "$CHECKSUM_FILE")
-
-# Calculate current checksum
-CURRENT_CHECKSUM=$(sha256sum "$POOL_FILE" | awk '{print $1}')
+# Check if checksum file has combinations entry
+HAS_COMBINATIONS=$(grep -c "Combinations File:" "$CHECKSUM_FILE")
 
 echo "Verifying ingot pool integrity..."
 echo ""
-echo "Stored checksum:  $STORED_CHECKSUM"
-echo "Current checksum: $CURRENT_CHECKSUM"
-echo ""
 
-if [ "$STORED_CHECKSUM" = "$CURRENT_CHECKSUM" ]; then
+# Extract and verify pool JSON checksum (line 6 contains the hash)
+STORED_POOL_CHECKSUM=$(sed -n '6p' "$CHECKSUM_FILE" | sed 's/SHA-256 Checksum: //')
+CURRENT_POOL_CHECKSUM=$(sha256sum "$POOL_FILE" | awk '{print $1}')
+
+echo "Pool JSON File:"
+echo "  Stored checksum:  $STORED_POOL_CHECKSUM"
+echo "  Current checksum: $CURRENT_POOL_CHECKSUM"
+
+POOL_VALID=false
+if [ "$STORED_POOL_CHECKSUM" = "$CURRENT_POOL_CHECKSUM" ]; then
+    echo "  ✓ Pool JSON verified"
+    POOL_VALID=true
+else
+    echo "  ✗ Pool JSON verification FAILED"
+fi
+
+# Verify combinations file if it exists
+COMBINATIONS_VALID=true
+if [ "$HAS_COMBINATIONS" -gt 0 ] && [ -f "$COMBINATIONS_FILE" ]; then
+    echo ""
+    echo "Combinations File:"
+    STORED_COMB_CHECKSUM=$(sed -n '9p' "$CHECKSUM_FILE" | sed 's/SHA-256 Checksum: //')
+    CURRENT_COMB_CHECKSUM=$(sha256sum "$COMBINATIONS_FILE" | awk '{print $1}')
+    
+    echo "  Stored checksum:  $STORED_COMB_CHECKSUM"
+    echo "  Current checksum: $CURRENT_COMB_CHECKSUM"
+    
+    if [ "$STORED_COMB_CHECKSUM" = "$CURRENT_COMB_CHECKSUM" ]; then
+        echo "  ✓ Combinations file verified"
+    else
+        echo "  ✗ Combinations file verification FAILED"
+        COMBINATIONS_VALID=false
+    fi
+fi
+
+echo ""
+if [ "$POOL_VALID" = true ] && [ "$COMBINATIONS_VALID" = true ]; then
     echo "✓ VERIFICATION SUCCESSFUL"
     echo "The ingot pool has not been modified since the checksum was generated."
     exit 0
 else
     echo "✗ VERIFICATION FAILED"
-    echo "The ingot pool has been modified or the checksum is incorrect."
+    echo "One or more files have been modified or the checksums are incorrect."
     exit 1
 fi
