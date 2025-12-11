@@ -24,8 +24,8 @@ HAS_COMBINATIONS=$(grep -c "Combinations File:" "$CHECKSUM_FILE")
 echo "Verifying ingot pool integrity..."
 echo ""
 
-# Extract and verify pool JSON checksum (line 6 contains the hash)
-STORED_POOL_CHECKSUM=$(sed -n '6p' "$CHECKSUM_FILE" | sed 's/SHA-256 Checksum: //')
+# Extract pool JSON checksum using grep (line after "Pool File:")
+STORED_POOL_CHECKSUM=$(grep -A 1 "^Pool File:" "$CHECKSUM_FILE" | tail -n 1 | sed 's/SHA-256 Checksum: //')
 CURRENT_POOL_CHECKSUM=$(sha256sum "$POOL_FILE" | awk '{print $1}')
 
 echo "Pool JSON File:"
@@ -45,7 +45,8 @@ COMBINATIONS_VALID=true
 if [ "$HAS_COMBINATIONS" -gt 0 ] && [ -f "$COMBINATIONS_FILE" ]; then
     echo ""
     echo "Combinations File:"
-    STORED_COMB_CHECKSUM=$(sed -n '9p' "$CHECKSUM_FILE" | sed 's/SHA-256 Checksum: //')
+    # Extract combinations checksum (line after "Combinations File:")
+    STORED_COMB_CHECKSUM=$(grep -A 1 "^Combinations File:" "$CHECKSUM_FILE" | tail -n 1 | sed 's/SHA-256 Checksum: //')
     CURRENT_COMB_CHECKSUM=$(sha256sum "$COMBINATIONS_FILE" | awk '{print $1}')
     
     echo "  Stored checksum:  $STORED_COMB_CHECKSUM"
