@@ -51,10 +51,9 @@ cat > "$CHECKSUM_FILE" <<EOF
 Golden Ticket Ingot Pool Checksum
 ==================================
 Generated: $TIMESTAMP
-Pool File: $POOL_FILE
 
-SHA-256 Checksum:
-$CHECKSUM
+Pool File: $POOL_FILE
+SHA-256 Checksum: $CHECKSUM
 
 This checksum is published before the draw to verify the pool
 was created beforehand and has not been modified.
