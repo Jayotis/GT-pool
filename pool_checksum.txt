@@ -1,0 +1,13 @@
+Golden Ticket Ingot Pool Checksum
+==================================
+Generated: 2025-12-11 13:53:15 UTC
+Pool File: ingot_pool.json
+
+SHA-256 Checksum:
+909a297dc725c2e9143ff8a8d1da429ad280950693694b520a795fac234d86e3
+
+This checksum is published before the draw to verify the pool
+was created beforehand and has not been modified.
+
+To verify:
+  sha256sum -c pool_checksum.txt
